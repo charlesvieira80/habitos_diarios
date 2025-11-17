@@ -1,0 +1,5 @@
+{
+  "name": "Hábitos Diários",
+  "description": "Um aplicativo para cadastrar hábitos diários com pontuações, acompanhando a pontuação diária e semanal.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,56 @@
+
+import { useState, useEffect, useCallback } from 'react';
+import type { Task } from '../types';
+
+const STORAGE_KEY = 'weekly-habit-tracker-tasks';
+
+export const useTasks = () => {
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    try {
+      const item = window.localStorage.getItem(STORAGE_KEY);
+      return item ? JSON.parse(item) : [];
+    } catch (error) {
+      console.error('Error reading from localStorage', error);
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    } catch (error) {
+      console.error('Error writing to localStorage', error);
+    }
+  }, [tasks]);
+
+  const addTask = useCallback((name: string, points: number) => {
+    if (name.trim() === '' || points <= 0) return;
+    const newTask: Task = {
+      id: crypto.randomUUID(),
+      name,
+      points: Number(points),
+      completions: [],
+    };
+    setTasks((prevTasks) => [...prevTasks, newTask]);
+  }, []);
+
+  const toggleTaskCompletion = useCallback((taskId: string, date: string) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === taskId) {
+          const completions = task.completions.includes(date)
+            ? task.completions.filter((d) => d !== date)
+            : [...task.completions, date].sort();
+          return { ...task, completions };
+        }
+        return task;
+      })
+    );
+  }, []);
+  
+  const deleteTask = useCallback((taskId: string) => {
+    setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+  }, []);
+
+  return { tasks, addTask, toggleTaskCompletion, deleteTask };
+};
