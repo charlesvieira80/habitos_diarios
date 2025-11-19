@@ -23,11 +23,12 @@ export const useTasks = () => {
     }
   }, [tasks]);
 
-  const addTask = useCallback((name: string, points: number) => {
+  const addTask = useCallback((name: string, points: number, description: string = '') => {
     if (name.trim() === '' || points <= 0) return;
     const newTask: Task = {
       id: crypto.randomUUID(),
       name,
+      description,
       points: Number(points),
       completions: [],
     };

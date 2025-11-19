@@ -23,3 +23,14 @@ export const getWeekRange = (date: Date): { start: Date; end: Date } => {
   
   return { start: startDate, end: endDate };
 };
+
+export const getDatesOfWeek = (date: Date): Date[] => {
+  const { start } = getWeekRange(date);
+  const dates: Date[] = [];
+  for (let i = 0; i < 7; i++) {
+    const nextDate = new Date(start);
+    nextDate.setDate(start.getDate() + i);
+    dates.push(nextDate);
+  }
+  return dates;
+};

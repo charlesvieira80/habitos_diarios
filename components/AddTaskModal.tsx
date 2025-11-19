@@ -4,24 +4,26 @@ import React, { useState, useEffect } from 'react';
 interface AddTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddTask: (name: string, points: number) => void;
+  onAddTask: (name: string, points: number, description: string) => void;
 }
 
 const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose, onAddTask }) => {
   const [name, setName] = useState('');
   const [points, setPoints] = useState<number | ''>('');
+  const [description, setDescription] = useState('');
 
   useEffect(() => {
     if (!isOpen) {
       setName('');
       setPoints('');
+      setDescription('');
     }
   }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim() && typeof points === 'number' && points > 0) {
-      onAddTask(name.trim(), points);
+      onAddTask(name.trim(), points, description.trim());
     }
   };
 
@@ -47,11 +49,26 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose, onAddTask 
               id="task-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               required
               autoFocus
             />
           </div>
+          
+          <div>
+            <label htmlFor="task-desc" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Descrição <span className="text-xs font-normal text-gray-500">(Opcional)</span>
+            </label>
+            <textarea
+              id="task-desc"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+              placeholder="Explique como realizar esta tarefa..."
+            />
+          </div>
+
           <div>
             <label htmlFor="task-points" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Pontos
@@ -61,7 +78,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose, onAddTask 
               id="task-points"
               value={points}
               onChange={(e) => setPoints(e.target.value === '' ? '' : parseInt(e.target.value, 10))}
-              className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               required
               min="1"
             />
@@ -76,7 +93,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose, onAddTask 
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-indigo-300 disabled:cursor-not-allowed transition-colors"
               disabled={!name.trim() || !points || points <= 0}
             >
               Salvar Tarefa
